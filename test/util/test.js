@@ -1,7 +1,7 @@
 /* eslint-env commonjs, mocha */
 /* global object */
 
-var extend = require('fin-hypergrid-data-source-base').extend;
+var extend = require('datasaur-indexed').extend;
 
 require('should'); // extends `Object` (!) with `.should`; creates `should()`
 
