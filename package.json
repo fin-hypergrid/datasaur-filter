@@ -1,6 +1,6 @@
 {
   "name": "datasaur-filter",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "description": "Datasaur filter module.",
   "main": "index.js",
   "scripts": {
@@ -16,7 +16,9 @@
     "url": "https://github.com/joneit/datasaur-filter/issues"
   },
   "homepage": "https://github.com/joneit/datasaur-filter#readme",
-  "dependencies": {},
+  "dependencies": {
+    "datasaur-indexed": "^0.1.0"
+  },
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-eslint": "^3.0.1",

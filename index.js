@@ -18,42 +18,21 @@ var DataSourceIndexed = require('datasaur-indexed');
  */
 
 /**
+ * @name controller
+ * @implements filterInterface
+ * @memberOf DataSourceGlobalFilter#
+ */
+
+/**
  * @constructor
  * @extends DataSourceIndexed
  */
 var DataSourceGlobalFilter = DataSourceIndexed.extend('DataSourceGlobalFilter', {
-
     /**
-     *
-     * @memberOf DataSourceGlobalFilter#
-     * @param {filterFunction} [filter] - If undefined, deletes filter.
-     */
-    set: function(filter) {
-        if (filter) {
-            /**
-             * @implements filterInterface
-             * @memberOf DataSourceGlobalFilter#
-             */
-            this.filter = filter;
-        } else {
-            delete this.filter;
-        }
-    },
-
-    get: function(filter) {
-        return this.filter;
-    },
-
-    sortGroups: function(sorter){
-        this.dataSource.sortGroups(sorter);
-    },
-
-    /**
-     *
      * @memberOf DataSourceGlobalFilter#
      */
     apply: function() {
-        if (this.filter && this.filter.test) {
+        if (this.controller.test) {
             this.buildIndex(this.filterTest);
         } else {
             this.clearIndex();
@@ -65,9 +44,8 @@ var DataSourceGlobalFilter = DataSourceIndexed.extend('DataSourceGlobalFilter', 
      * @memberOf DataSourceGlobalFilter#
      */
     filterTest: function(r, rowObject) {
-        return this.filter.test(rowObject);
+        return this.controller.test(rowObject);
     },
-
 
     /**
      *
@@ -75,7 +53,7 @@ var DataSourceGlobalFilter = DataSourceIndexed.extend('DataSourceGlobalFilter', 
      * @returns {number}
      */
     getRowCount: function() {
-        return this.filter && this.filter.test ? this.index.length : this.dataSource.getRowCount();
+        return this.controller.test ? this.index.length : this.dataSource.getRowCount();
     }
 });
 

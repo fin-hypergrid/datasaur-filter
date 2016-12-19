@@ -56,8 +56,8 @@ function test() {
 function saurify() {
     return gulp.src(srcDir + 'index.js')
         .pipe($$.replace( // ...starting immediately following 'use strict' and...
-            "'use strict';\n\nvar DataSourceIndexed = require('datasaur-indexed');",
-            "'use strict';\n\n(function() {\n\nvar DataSourceIndexed = window.datasaur.indexed;"
+            /var DataSourceIndexed .*;/,
+            "(function() {\n\nvar DataSourceIndexed = window.datasaur.indexed;"
         ))
         .pipe($$.replace( // ...ending after modules.exports.
             /\w+\.exports(\s*=\s*)(\w+);/,
