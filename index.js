@@ -28,6 +28,20 @@ var DataSourceIndexed = require('datasaur-indexed');
  * @extends DataSourceIndexed
  */
 var DataSourceGlobalFilter = DataSourceIndexed.extend('DataSourceGlobalFilter', {
+
+    /**
+     * INCLUDED FOR BACKWARDS COMPATIBILITY FOR VERSIONS OF HYPERGRID < 1.2.10
+     * @param {filterInterface} [controller] - If undefined, deletes filter.
+     * @memberOf DataSourceGlobalFilter#
+     */
+    set: function(controller) {
+        this.controller = controller || this.newController();
+    },
+
+    get: function() {
+        return this.controller;
+    },
+
     /**
      * @memberOf DataSourceGlobalFilter#
      */
