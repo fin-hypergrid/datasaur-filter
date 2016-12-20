@@ -6,7 +6,8 @@
 var gulp        = require('gulp'),
     $$          = require('gulp-load-plugins')(),
     runSequence = require('run-sequence'),
-    pipe        = require('multipipe');
+    pipe        = require('multipipe'),
+    version     = require('./package.json').version;
 
 var name        = 'datasaur-filter',
     srcDir      = './',
@@ -66,12 +67,17 @@ function saurify() {
         .pipe(
             $$.mirror(
                 pipe(
-                    $$.rename(name + '.js')
+                    $$.mirror(
+                        pipe($$.rename(version + '/' + name + '.js')),
+                        pipe($$.rename('edge/' + name + '.js'))
+                    )
                 ),
                 pipe(
-                    $$.rename(name + '.min.js'),
-                    $$.uglify()
-                        .on('error', $$.util.log)
+                    $$.uglify().on('error', $$.util.log),
+                    $$.mirror(
+                        pipe($$.rename(version + '/' + name + '.min.js')),
+                        pipe($$.rename('edge/' + name + '.min.js'))
+                    )
                 )
             )
         )
