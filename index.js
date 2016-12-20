@@ -18,6 +18,14 @@ var DataSourceIndexed = require('datasaur-indexed');
  */
 
 /**
+ * Before calling {@link filterInterface#test} on the grid (_i.e.,_ on every row), it is worth calling `enabled`.
+ * @name filterInterface#enabled
+ * @type {boolean}
+ * * `true` - Filter expression is non null (for filter-tree this means that it contains one or more leaf nodes)
+ * * `false` - Filter expression is null
+ */
+
+/**
  * @name controller
  * @implements filterInterface
  * @memberOf DataSourceGlobalFilter#
@@ -46,7 +54,7 @@ var DataSourceGlobalFilter = DataSourceIndexed.extend('DataSourceGlobalFilter', 
      * @memberOf DataSourceGlobalFilter#
      */
     apply: function() {
-        if (this.controller.test) {
+        if (this.controller.enabled) {
             this.buildIndex(this.filterTest);
         } else {
             this.clearIndex();
@@ -67,7 +75,7 @@ var DataSourceGlobalFilter = DataSourceIndexed.extend('DataSourceGlobalFilter', 
      * @returns {number}
      */
     getRowCount: function() {
-        return this.controller.test ? this.index.length : this.dataSource.getRowCount();
+        return this.controller.enabled ? this.index.length : this.dataSource.getRowCount();
     }
 });
 
