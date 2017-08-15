@@ -38,35 +38,27 @@ var DataSourceIndexed = require('datasaur-indexed');
 var DataSourceGlobalFilter = DataSourceIndexed.extend('DataSourceGlobalFilter', {
 
     /**
-     * INCLUDED FOR BACKWARDS COMPATIBILITY FOR VERSIONS OF HYPERGRID < 1.2.10
-     * @param {filterInterface} [controller] - If undefined, deletes filter.
-     * @memberOf DataSourceGlobalFilter#
+     * @memberOf DataSourceSorterComposite#
      */
-    set: function(controller) {
-        this.controller = controller || this.newController();
-    },
+    initialize: function() {
+        this.filter = {};
 
-    get: function() {
-        return this.controller;
+        this.subscribe('set-filter', function(filter) {
+            this.filter = filter;
+        });
     },
 
     /**
      * @memberOf DataSourceGlobalFilter#
      */
     apply: function() {
-        if (this.controller.enabled) {
-            this.buildIndex(this.filterTest);
+        if (this.filter.enabled) {
+            this.buildIndex(function(r, rowObject) {
+                return this.filter.test(rowObject);
+            });
         } else {
             this.clearIndex();
         }
-    },
-
-    /**
-     * @implements filterPredicate
-     * @memberOf DataSourceGlobalFilter#
-     */
-    filterTest: function(r, rowObject) {
-        return this.controller.test(rowObject);
     },
 
     /**
@@ -75,7 +67,7 @@ var DataSourceGlobalFilter = DataSourceIndexed.extend('DataSourceGlobalFilter', 
      * @returns {number}
      */
     getRowCount: function() {
-        return this.controller.enabled ? this.index.length : this.dataSource.getRowCount();
+        return this.filter.enabled ? this.index.length : this.dataSource.getRowCount();
     }
 });
 

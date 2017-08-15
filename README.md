@@ -1,3 +1,1 @@
-# datasaur-filter
-
-Datasaur filter module.
+Filter _Datasaur_ module
