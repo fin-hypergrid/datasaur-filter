@@ -1,6 +1,6 @@
 {
   "name": "datasaur-filter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Filter Datasaur module",
   "main": "index.js",
   "scripts": {

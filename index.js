@@ -42,10 +42,10 @@ var DataSourceGlobalFilter = DataSourceIndexed.extend('DataSourceGlobalFilter', 
      */
     initialize: function() {
         this.filter = {};
+    },
 
-        this.subscribe('set-filter', function(filter) {
-            this.filter = filter;
-        });
+    setFilter: function(filter) {
+        this.filter = filter;
     },
 
     /**
