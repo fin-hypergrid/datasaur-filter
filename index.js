@@ -3,6 +3,7 @@
 'use strict';
 
 var DataSourceIndexed = require('datasaur-indexed');
+var compile = require('predicated').compile;
 
 /**
  * @interface filterInterface
@@ -11,24 +12,10 @@ var DataSourceIndexed = require('datasaur-indexed');
 /**
  * @name filterInterface#test
  * @method
- * @param {object} dataRow - Object representing a row in the grid containing all the fields listed in {@link DataSource#fields|fields}.
+ * @param {object} dataRow - Object representing a row in the grid containing all the column names included in {@link DataSource#getSchema|getSchema()}.
  * @returns {boolean}
  * * `true` - include in grid (row passes through filter)
  * * `false` - exclude from grid (row is blocked by filter)
- */
-
-/**
- * Before calling {@link filterInterface#test} on the grid (_i.e.,_ on every row), it is worth calling `enabled`.
- * @name filterInterface#enabled
- * @type {boolean}
- * * `true` - Filter expression is non null (for filter-tree this means that it contains one or more leaf nodes)
- * * `false` - Filter expression is null
- */
-
-/**
- * @name controller
- * @implements filterInterface
- * @memberOf DataSourceGlobalFilter#
  */
 
 /**
@@ -38,39 +25,62 @@ var DataSourceIndexed = require('datasaur-indexed');
 var DataSourceGlobalFilter = DataSourceIndexed.extend('DataSourceGlobalFilter', {
 
     /**
-     * @memberOf DataSourceSorterComposite#
+     * @param {object|function|string} [filter] - Falsy means remove filter.
+     * @param {object} [options]
+     * @param {string} [options.syntax='javascript'] - Also accepts 'traditional' (VB/SQL-like)
+     * @param {string[]} [vars] - Check expression and throw error if it has variables not in schema or `vars`. If omitted or falsy, no checking is performed.
+     * @memberOf DataSourceGlobalFilter#
      */
-    initialize: function() {
-        this.filter = {};
-    },
+    setFilter: function(filter, options) {
+        if (!filter) {
+            filter = undefined;
+        }
 
-    setFilter: function(filter) {
-        this.filter = filter;
+        switch (typeof filter) {
+            case 'object':
+                this._filter = filter;
+                break;
+
+            case 'function':
+                this._filter = { test: filter };
+                break;
+
+            case 'string':
+                options = options && {
+                    syntax: options.syntax,
+                    keys: options.vars && this.getSchema().map(name).concat(options.vars)
+                };
+                this._filter = { test: compile(filter, options) };
+                break;
+
+            default:
+                this._filter = undefined;
+        }
+
+        this.apply();
     },
 
     /**
      * @memberOf DataSourceGlobalFilter#
      */
     apply: function() {
-        if (this.filter.enabled) {
-            this.buildIndex(function(r, rowObject) {
-                return this.filter.test(rowObject);
-            });
-        } else {
-            this.clearIndex();
-        }
-    },
+        var predicate,
+            filter = this._filter,
+            source = this.next;
 
-    /**
-     *
-     * @memberOf DataSourceGlobalFilter#
-     * @returns {number}
-     */
-    getRowCount: function() {
-        return this.filter.enabled ? this.index.length : this.dataSource.getRowCount();
+        if (filter) {
+            predicate = function(y) {
+                return filter.test(source.getRow(y));
+            }
+        }
+
+        this.buildIndex(predicate);
     }
+
 });
 
-Object.defineProperty(DataSourceGlobalFilter.prototype, 'type', { value: 'filter' }); // read-only property
+function name(fld) {
+    return fld.name;
+}
 
 module.exports = DataSourceGlobalFilter;

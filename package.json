@@ -1,6 +1,6 @@
 {
   "name": "datasaur-filter",
-  "version": "1.0.1",
+  "version": "3.0.0",
   "description": "Filter Datasaur module",
   "main": "index.js",
   "scripts": {
@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/fin-hypergrid/datasaur-filter#readme",
   "dependencies": {
-    "datasaur-indexed": "^1.0.0"
+    "datasaur-indexed": "github:fin-hypergrid/datasaur-indexed#3.0.0",
+    "predicated": "^1.0.0"
   }
 }
