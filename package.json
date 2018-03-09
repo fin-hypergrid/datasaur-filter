@@ -18,6 +18,6 @@
   "homepage": "https://github.com/fin-hypergrid/datasaur-filter#readme",
   "dependencies": {
     "datasaur-indexed": "github:fin-hypergrid/datasaur-indexed#3.0.0",
-    "predicated": "^1.0.0"
+    "predicated": "^2.0.0"
   }
 }

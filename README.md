@@ -21,11 +21,11 @@ Additionally, `setFilter` accepts two options in its second parameter.
 > **Note:** Both options utilize [`literalz`](https://npmjs.org/package/literalz) to temporarily hide the expression's string literals, the contents of which we specifically want to exclude from these operations.
 
 ##### `options.vars` : string[]
- A value of `[]` passes a data row object to [`predicated`](https://github.com/joneit/predicated) in its [`keys`](https://github.com/joneit/predicated#keys) option, which checks the expression for syntax and reference errors at setup time, rather than just letting the filter fail at `apply` time (see below).
- 
- If your filter expression intentionally references external variables, list their names in the array.
- 
- Omit to skip the check altogether.
+When set to an array, concatenates column names (keys of a data row object) to [`predicated`](https://github.com/joneit/predicated) in its [`keys`](https://github.com/joneit/predicated#keys) option, which checks the expression for syntax and reference errors at setup time, rather than just letting the filter fail at `apply` time (see below).
+
+If your filter expression intentionally references external variables, list their names in the array. For example, to allow use of the `Math` api, specify `vars: [Math]`. To allow all globals, specify `vars: Object.getOwnPropertyNames(window)`.
+
+Omit to skip the check altogether.
 
 ##### `options.syntax` : string
 The value is passed verbatim to `predicated`, which applies the named filter converter to the expression to convert the expression to JavaScript syntax.
@@ -33,7 +33,7 @@ The value is passed verbatim to `predicated`, which applies the named filter con
 There are two built-in converters:
    * `'javascript'` — No-op; just a pass-through function.
    * `'traditional'` — VB or SQL style syntax. See [src/SQL-to-JS.js](https://github.com/joneit/predicated/blob/master/converters/SQL-to-JS.js) for details.
-   
+
 #### `apply` method
 
 The [`apply()`](https://github.com/fin-hypergrid/datasaur-filter/blob/master/index.js#L27-L62) method:
