@@ -2,7 +2,7 @@
 
 'use strict';
 
-var DataSourceIndexed = require('datasaur-indexed');
+var DatasaurIndexed = require('datasaur-indexed');
 var compile = require('predicated').compile;
 
 /**
@@ -12,7 +12,7 @@ var compile = require('predicated').compile;
 /**
  * @name filterInterface#test
  * @method
- * @param {object} dataRow - Object representing a row in the grid containing all the column names included in {@link DataSource#getSchema|getSchema()}.
+ * @param {object} dataRow - Object representing a row in the grid containing all the column names included in {@link Datasaur#getSchema|getSchema()}.
  * @returns {boolean}
  * * `true` - include in grid (row passes through filter)
  * * `false` - exclude from grid (row is blocked by filter)
@@ -20,16 +20,16 @@ var compile = require('predicated').compile;
 
 /**
  * @constructor
- * @extends DataSourceIndexed
+ * @extends DatasaurIndexed
  */
-var DataSourceGlobalFilter = DataSourceIndexed.extend('DataSourceGlobalFilter', {
+var DatasaurFilter = DatasaurIndexed.extend('DatasaurFilter', {
 
     /**
      * @param {object|function|string} [filter] - Falsy means remove filter.
      * @param {object} [options]
      * @param {string} [options.syntax='javascript'] - Also accepts 'traditional' (VB/SQL-like)
      * @param {string[]} [vars] - Check expression and throw error if it has variables not in schema or `vars`. If omitted or falsy, no checking is performed.
-     * @memberOf DataSourceGlobalFilter#
+     * @memberOf DatasaurFilter#
      */
     setFilter: function(filter, options) {
         if (!filter) {
@@ -61,16 +61,15 @@ var DataSourceGlobalFilter = DataSourceIndexed.extend('DataSourceGlobalFilter', 
     },
 
     /**
-     * @memberOf DataSourceGlobalFilter#
+     * @memberOf DatasaurFilter#
      */
     apply: function() {
         var predicate,
-            filter = this._filter,
-            source = this.next;
+            filter = this._filter;
 
         if (filter) {
             predicate = function(y) {
-                return filter.test(source.getRow(y));
+                return filter.test(this.getRow(y));
             }
         }
 
@@ -83,4 +82,4 @@ function name(fld) {
     return fld.name;
 }
 
-module.exports = DataSourceGlobalFilter;
+module.exports = DatasaurFilter;
